@@ -15,6 +15,8 @@
         <h2>Cross Repository Milestones</h2>
         <input type="password" id="personal_access_token" name="personal_access_token"
             placeholder="Enter Github Personal Access Token" style="width:100%;" autofocus="true" autocomplete="on" />
+        <input type="password" id="organization" name="organization"
+            placeholder="Enter Github Org" style="width:100%;" autofocus="false" autocomplete="false" />
         <input type="submit" id="load_repos_btn" value="Load Repositories" onclick="load_repos()"
             style="width: 100%;" />
         <div id="repo-list" style="visibility: hidden;">
@@ -178,13 +180,14 @@
             btn.classList.add("glowing");
             try {
                 let token = document.getElementById("personal_access_token").value;
+                let org = document.getElementById("organization").value;
                 if (!token) {
                     throw {
                         "message": "Please enter access token"
                     };
                 }
-                octokit = new Octokit({ auth: token});
-                var response = await octokit.request('GET /user/repos');
+                octokit = new Octokit({ auth: token });
+                var response = await octokit.request(('GET /orgs/{org}/repos', { org }));
                 repos = response.data;
             } catch (error) {
                 alert(error.message);
